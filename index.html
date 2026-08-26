@@ -24,6 +24,7 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -70,7 +71,8 @@
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s ease;
+      outline: none;
+      transition: background-color 0.15s ease, color 0.15s ease;
     }
 
     .dan-btn.active {
@@ -97,13 +99,8 @@
       outline: none;
     }
 
-    .mode-btn {
-      flex: 2;
-    }
-
-    .timer-select {
-      flex: 1.5;
-    }
+    .mode-btn { flex: 2; }
+    .timer-select { flex: 1.5; }
 
     .timer-bar-container {
       width: 100%;
@@ -129,9 +126,7 @@
       justify-content: space-around;
     }
 
-    .stats strong {
-      color: #ffffff;
-    }
+    .stats strong { color: #ffffff; }
 
     .question-box {
       font-size: 3.2rem;
@@ -157,11 +152,30 @@
       font-size: 1.35rem;
       font-weight: 700;
       cursor: pointer;
-      transition: background-color 0.15s ease;
+      outline: none;
+      user-select: none;
+      transition: background-color 0.1s ease;
     }
 
-    .choice-btn:hover {
+    /* 마우스 호버 지원 기기에서만 호버 효과 적용 (아이폰 터치 후 파란색 고정 방지) */
+    @media (hover: hover) and (pointer: fine) {
+      .choice-btn:hover {
+        background-color: var(--accent-color);
+      }
+    }
+
+    .choice-btn:active {
       background-color: var(--accent-color);
+    }
+
+    .choice-btn.correct-choice {
+      background-color: var(--correct-color) !important;
+      border-color: var(--correct-color) !important;
+    }
+
+    .choice-btn.wrong-choice {
+      background-color: var(--wrong-color) !important;
+      border-color: var(--wrong-color) !important;
     }
 
     .input-box {
@@ -260,6 +274,7 @@
     let streak = 0;
     let totalAttempts = 0;
     let correctAttempts = 0;
+    let isProcessing = false; // 중복 클릭 방지
 
     let timerInterval = null;
     let timeLimit = 5;
@@ -362,6 +377,7 @@
     }
 
     function nextQuestion() {
+      isProcessing = false;
       feedbackEl.textContent = '';
       feedbackEl.className = 'feedback';
       generateQuestion();
@@ -376,15 +392,27 @@
       startTimer();
     }
 
+    // 오답 번호 생성 알고리즘 개선 (무한 루프 방지)
     function renderChoices() {
       multipleArea.innerHTML = '';
       const options = new Set([correctAnswer]);
-      
-      while (options.size < 4) {
-        const delta = (Math.floor(Math.random() * 5) - 2) * num1;
-        const wrong = correctAnswer + (delta === 0 ? (Math.random() > 0.5 ? 2 : -2) : delta);
+      let attempts = 0;
+
+      // 1단계: 유사 배수로 오답 생성 시도
+      while (options.size < 4 && attempts < 50) {
+        attempts++;
+        const delta = (Math.floor(Math.random() * 7) - 3) * num1;
+        const wrong = correctAnswer + delta;
         if (wrong > 0 && wrong !== correctAnswer) {
           options.add(wrong);
+        }
+      }
+
+      // 2단계: 부족할 경우 무작위 1~81 사이 수로 4개 보장
+      while (options.size < 4) {
+        const rand = Math.floor(Math.random() * 80) + 2;
+        if (rand !== correctAnswer) {
+          options.add(rand);
         }
       }
 
@@ -394,12 +422,18 @@
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.textContent = opt;
-        btn.onclick = () => handleAnswer(opt === correctAnswer);
+        btn.onclick = (e) => {
+          if (isProcessing) return;
+          const isCorrect = (opt === correctAnswer);
+          btn.classList.add(isCorrect ? 'correct-choice' : 'wrong-choice');
+          handleAnswer(isCorrect);
+        };
         multipleArea.appendChild(btn);
       });
     }
 
     function checkShortAnswer() {
+      if (isProcessing) return;
       const userVal = parseInt(answerInput.value, 10);
       if (isNaN(userVal)) return;
       handleAnswer(userVal === correctAnswer);
@@ -410,6 +444,8 @@
     });
 
     function handleAnswer(isCorrect, isTimeout = false) {
+      if (isProcessing) return;
+      isProcessing = true;
       clearInterval(timerInterval);
       totalAttempts++;
 
@@ -418,7 +454,7 @@
         streak++;
         feedbackEl.textContent = '정답입니다.';
         feedbackEl.className = 'feedback correct';
-        setTimeout(nextQuestion, 400);
+        setTimeout(nextQuestion, 350);
       } else {
         streak = 0;
         feedbackEl.textContent = isTimeout ? `시간 초과! (정답: ${correctAnswer})` : `오답입니다. (정답: ${correctAnswer})`;
