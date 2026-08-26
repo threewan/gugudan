@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>구구단 연습</title>
   <style>
     :root {
@@ -25,6 +25,7 @@
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     body {
@@ -34,23 +35,24 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 20px;
+      padding: 16px;
+      user-select: none;
     }
 
     .container {
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 28px 24px;
+      padding: 24px 20px;
       width: 100%;
-      max-width: 440px;
+      max-width: 400px;
       text-align: center;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     }
 
     h1 {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
       font-weight: 700;
       color: #ffffff;
     }
@@ -58,21 +60,20 @@
     .dan-selector {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
+      gap: 6px;
+      margin-bottom: 12px;
     }
 
     .dan-btn {
       background-color: var(--btn-bg);
       color: var(--sub-text);
       border: 1px solid var(--border-color);
-      padding: 10px 0;
-      border-radius: 8px;
-      font-size: 0.95rem;
+      padding: 8px 0;
+      border-radius: 6px;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       outline: none;
-      transition: background-color 0.15s ease, color 0.15s ease;
     }
 
     .dan-btn.active {
@@ -84,16 +85,16 @@
     .control-bar {
       display: flex;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
     .mode-btn, .timer-select {
       background-color: var(--btn-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 10px 12px;
-      border-radius: 8px;
-      font-size: 0.9rem;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       outline: none;
@@ -104,10 +105,10 @@
 
     .timer-bar-container {
       width: 100%;
-      height: 6px;
+      height: 5px;
       background-color: #292932;
       border-radius: 3px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       overflow: hidden;
     }
 
@@ -119,9 +120,9 @@
     }
 
     .stats {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--sub-text);
-      margin-bottom: 24px;
+      margin-bottom: 16px;
       display: flex;
       justify-content: space-around;
     }
@@ -129,39 +130,31 @@
     .stats strong { color: #ffffff; }
 
     .question-box {
-      font-size: 3.2rem;
+      font-size: 2.8rem;
       font-weight: 800;
-      margin: 10px 0 28px;
+      margin: 8px 0 18px;
       letter-spacing: 2px;
       color: #ffffff;
     }
 
+    /* 객관식 영역 */
     .choices-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 16px;
     }
 
     .choice-btn {
       background-color: var(--btn-bg);
       color: #ffffff;
       border: 1px solid var(--border-color);
-      padding: 18px;
-      border-radius: 12px;
-      font-size: 1.35rem;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 1.3rem;
       font-weight: 700;
       cursor: pointer;
       outline: none;
-      user-select: none;
-      transition: background-color 0.1s ease;
-    }
-
-    /* 마우스 호버 지원 기기에서만 호버 효과 적용 (아이폰 터치 후 파란색 고정 방지) */
-    @media (hover: hover) and (pointer: fine) {
-      .choice-btn:hover {
-        background-color: var(--accent-color);
-      }
     }
 
     .choice-btn:active {
@@ -178,45 +171,62 @@
       border-color: var(--wrong-color) !important;
     }
 
-    .input-box {
+    /* 단답형: 가상 키패드 영역 */
+    .short-answer-container {
       display: flex;
+      flex-direction: column;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
     }
 
-    .input-box input {
-      flex: 1;
+    .display-screen {
       background-color: var(--btn-bg);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: 8px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
       color: #ffffff;
-      font-size: 1.5rem;
-      text-align: center;
-      padding: 12px;
+      letter-spacing: 4px;
+    }
+
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .key-btn {
+      background-color: var(--btn-bg);
+      color: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 14px 0;
+      border-radius: 8px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      cursor: pointer;
       outline: none;
     }
 
-    .input-box input:focus {
-      border-color: var(--accent-color);
-    }
-
-    .submit-btn {
+    .key-btn:active {
       background-color: var(--accent-color);
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 1.05rem;
-      padding: 0 24px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
     }
 
-    .submit-btn:hover {
-      background-color: var(--accent-hover);
+    .key-btn.action-btn {
+      font-size: 1.05rem;
+      background-color: #383844;
+    }
+
+    .key-btn.enter-btn {
+      background-color: var(--accent-color);
+      font-weight: 700;
     }
 
     .feedback {
-      height: 24px;
+      height: 20px;
       font-size: 0.95rem;
       font-weight: 600;
     }
@@ -255,11 +265,27 @@
 
     <div class="question-box" id="question">2 × 1</div>
 
+    <!-- 객관식 영역 -->
     <div class="choices-grid" id="multiple-choice-area"></div>
 
-    <div class="input-box hidden" id="short-answer-area">
-      <input type="number" id="answer-input" placeholder="정답 입력" inputmode="numeric" />
-      <button class="submit-btn" onclick="checkShortAnswer()">확인</button>
+    <!-- 단답형 영역 (화면 키패드 내장) -->
+    <div class="short-answer-container hidden" id="short-answer-area">
+      <div class="display-screen" id="answer-display">?</div>
+      
+      <div class="keypad-grid">
+        <button class="key-btn" onclick="inputDigit('1')">1</button>
+        <button class="key-btn" onclick="inputDigit('2')">2</button>
+        <button class="key-btn" onclick="inputDigit('3')">3</button>
+        <button class="key-btn" onclick="inputDigit('4')">4</button>
+        <button class="key-btn" onclick="inputDigit('5')">5</button>
+        <button class="key-btn" onclick="inputDigit('6')">6</button>
+        <button class="key-btn" onclick="inputDigit('7')">7</button>
+        <button class="key-btn" onclick="inputDigit('8')">8</button>
+        <button class="key-btn" onclick="inputDigit('9')">9</button>
+        <button class="key-btn action-btn" onclick="clearInput()">지움</button>
+        <button class="key-btn" onclick="inputDigit('0')">0</button>
+        <button class="key-btn enter-btn" onclick="submitShortAnswer()">확인</button>
+      </div>
     </div>
 
     <div class="feedback" id="feedback"></div>
@@ -271,10 +297,11 @@
     let num1 = 2;
     let num2 = 1;
     let correctAnswer = 2;
+    let currentInput = '';
     let streak = 0;
     let totalAttempts = 0;
     let correctAttempts = 0;
-    let isProcessing = false; // 중복 클릭 방지
+    let isProcessing = false;
 
     let timerInterval = null;
     let timeLimit = 5;
@@ -283,7 +310,7 @@
     const questionEl = document.getElementById('question');
     const multipleArea = document.getElementById('multiple-choice-area');
     const shortArea = document.getElementById('short-answer-area');
-    const answerInput = document.getElementById('answer-input');
+    const answerDisplay = document.getElementById('answer-display');
     const feedbackEl = document.getElementById('feedback');
     const modeBtn = document.getElementById('mode-btn');
     const streakEl = document.getElementById('streak-count');
@@ -385,20 +412,17 @@
       if (currentMode === 'multiple') {
         renderChoices();
       } else {
-        answerInput.value = '';
-        answerInput.focus();
+        clearInput();
       }
 
       startTimer();
     }
 
-    // 오답 번호 생성 알고리즘 개선 (무한 루프 방지)
     function renderChoices() {
       multipleArea.innerHTML = '';
       const options = new Set([correctAnswer]);
       let attempts = 0;
 
-      // 1단계: 유사 배수로 오답 생성 시도
       while (options.size < 4 && attempts < 50) {
         attempts++;
         const delta = (Math.floor(Math.random() * 7) - 3) * num1;
@@ -408,7 +432,6 @@
         }
       }
 
-      // 2단계: 부족할 경우 무작위 1~81 사이 수로 4개 보장
       while (options.size < 4) {
         const rand = Math.floor(Math.random() * 80) + 2;
         if (rand !== correctAnswer) {
@@ -422,7 +445,7 @@
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.textContent = opt;
-        btn.onclick = (e) => {
+        btn.onclick = () => {
           if (isProcessing) return;
           const isCorrect = (opt === correctAnswer);
           btn.classList.add(isCorrect ? 'correct-choice' : 'wrong-choice');
@@ -432,15 +455,40 @@
       });
     }
 
-    function checkShortAnswer() {
+    // 화면 키패드 입력 로직 (스마트폰 키보드 팝업 방지)
+    function inputDigit(digit) {
       if (isProcessing) return;
-      const userVal = parseInt(answerInput.value, 10);
-      if (isNaN(userVal)) return;
+      if (currentInput.length >= 2) return; // 구구단 답은 최대 2자리
+      currentInput += digit;
+      answerDisplay.textContent = currentInput;
+
+      // 두 자리 수이거나 정답과 일치하는 순간 바로 판정하려면 엔터 없이도 가능
+      if (parseInt(currentInput, 10) === correctAnswer) {
+        submitShortAnswer();
+      }
+    }
+
+    function clearInput() {
+      currentInput = '';
+      answerDisplay.textContent = '?';
+    }
+
+    function submitShortAnswer() {
+      if (isProcessing || currentInput === '') return;
+      const userVal = parseInt(currentInput, 10);
       handleAnswer(userVal === correctAnswer);
     }
 
-    answerInput.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') checkShortAnswer();
+    // PC 물리 키보드 지원 유지
+    window.addEventListener('keydown', (e) => {
+      if (currentMode !== 'short' || isProcessing) return;
+      if (e.key >= '0' && e.key <= '9') {
+        inputDigit(e.key);
+      } else if (e.key === 'Backspace') {
+        clearInput();
+      } else if (e.key === 'Enter') {
+        submitShortAnswer();
+      }
     });
 
     function handleAnswer(isCorrect, isTimeout = false) {
