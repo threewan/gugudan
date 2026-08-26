@@ -35,42 +35,46 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 16px;
+      min-height: 100dvh; /* iOS Safari 가변 주소창 최적화 */
+      padding: 12px;
       user-select: none;
+      -webkit-user-select: none;
+      overflow-x: hidden;
     }
 
     .container {
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 24px 20px;
+      padding: 20px 16px;
       width: 100%;
-      max-width: 400px;
+      max-width: 360px; /* 규격 축소로 모바일 한 화면에 고정 */
       text-align: center;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     }
 
     h1 {
-      font-size: 1.3rem;
-      margin-bottom: 16px;
+      font-size: 1.25rem;
+      margin-bottom: 12px;
       font-weight: 700;
       color: #ffffff;
     }
 
+    /* 단 선택 버튼 (2~9단) */
     .dan-selector {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .dan-btn {
       background-color: var(--btn-bg);
       color: var(--sub-text);
       border: 1px solid var(--border-color);
-      padding: 8px 0;
+      padding: 7px 0;
       border-radius: 6px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       outline: none;
@@ -84,31 +88,31 @@
 
     .control-bar {
       display: flex;
-      gap: 8px;
-      margin-bottom: 14px;
+      gap: 6px;
+      margin-bottom: 10px;
     }
 
     .mode-btn, .timer-select {
       background-color: var(--btn-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 8px 10px;
+      padding: 7px 8px;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       outline: none;
     }
 
-    .mode-btn { flex: 2; }
-    .timer-select { flex: 1.5; }
+    .mode-btn { flex: 1.8; }
+    .timer-select { flex: 1.2; }
 
     .timer-bar-container {
       width: 100%;
-      height: 5px;
+      height: 4px;
       background-color: #292932;
-      border-radius: 3px;
-      margin-bottom: 12px;
+      border-radius: 2px;
+      margin-bottom: 10px;
       overflow: hidden;
     }
 
@@ -120,9 +124,9 @@
     }
 
     .stats {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--sub-text);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-around;
     }
@@ -130,64 +134,55 @@
     .stats strong { color: #ffffff; }
 
     .question-box {
-      font-size: 2.8rem;
+      font-size: 2.6rem;
       font-weight: 800;
-      margin: 8px 0 18px;
+      margin: 4px 0 14px;
       letter-spacing: 2px;
       color: #ffffff;
     }
 
-    /* 객관식 영역 */
+    /* 객관식 레이아웃 */
     .choices-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     .choice-btn {
       background-color: var(--btn-bg);
       color: #ffffff;
       border: 1px solid var(--border-color);
-      padding: 16px;
-      border-radius: 10px;
-      font-size: 1.3rem;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1.25rem;
       font-weight: 700;
       cursor: pointer;
       outline: none;
     }
 
-    .choice-btn:active {
-      background-color: var(--accent-color);
-    }
+    .choice-btn:active { background-color: var(--accent-color); }
+    .choice-btn.correct-choice { background-color: var(--correct-color) !important; }
+    .choice-btn.wrong-choice { background-color: var(--wrong-color) !important; }
 
-    .choice-btn.correct-choice {
-      background-color: var(--correct-color) !important;
-      border-color: var(--correct-color) !important;
-    }
-
-    .choice-btn.wrong-choice {
-      background-color: var(--wrong-color) !important;
-      border-color: var(--wrong-color) !important;
-    }
-
-    /* 단답형: 가상 키패드 영역 */
+    /* 단답형 레이아웃: 완전 터치식 패드 (input 태그 전면 배제) */
     .short-answer-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-bottom: 10px;
+      width: 100%;
     }
 
     .display-screen {
-      background-color: var(--btn-bg);
+      background-color: #121216;
       border: 1px solid var(--border-color);
-      border-radius: 8px;
-      height: 52px;
+      border-radius: 6px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: #ffffff;
       letter-spacing: 4px;
@@ -196,38 +191,30 @@
     .keypad-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 6px;
+      width: 100%;
     }
 
     .key-btn {
       background-color: var(--btn-bg);
       color: #ffffff;
       border: 1px solid var(--border-color);
-      padding: 14px 0;
-      border-radius: 8px;
-      font-size: 1.25rem;
+      padding: 11px 0;
+      border-radius: 6px;
+      font-size: 1.15rem;
       font-weight: 600;
       cursor: pointer;
       outline: none;
+      width: 100%;
     }
 
-    .key-btn:active {
-      background-color: var(--accent-color);
-    }
-
-    .key-btn.action-btn {
-      font-size: 1.05rem;
-      background-color: #383844;
-    }
-
-    .key-btn.enter-btn {
-      background-color: var(--accent-color);
-      font-weight: 700;
-    }
+    .key-btn:active { background-color: var(--accent-color); }
+    .key-btn.action-btn { font-size: 0.95rem; background-color: #383844; }
+    .key-btn.enter-btn { background-color: var(--accent-color); font-weight: 700; }
 
     .feedback {
-      height: 20px;
-      font-size: 0.95rem;
+      height: 18px;
+      font-size: 0.85rem;
       font-weight: 600;
     }
 
@@ -265,26 +252,26 @@
 
     <div class="question-box" id="question">2 × 1</div>
 
-    <!-- 객관식 영역 -->
+    <!-- 객관식 -->
     <div class="choices-grid" id="multiple-choice-area"></div>
 
-    <!-- 단답형 영역 (화면 키패드 내장) -->
+    <!-- 단답형 (키보드 팝업 없는 내장형) -->
     <div class="short-answer-container hidden" id="short-answer-area">
       <div class="display-screen" id="answer-display">?</div>
       
       <div class="keypad-grid">
-        <button class="key-btn" onclick="inputDigit('1')">1</button>
-        <button class="key-btn" onclick="inputDigit('2')">2</button>
-        <button class="key-btn" onclick="inputDigit('3')">3</button>
-        <button class="key-btn" onclick="inputDigit('4')">4</button>
-        <button class="key-btn" onclick="inputDigit('5')">5</button>
-        <button class="key-btn" onclick="inputDigit('6')">6</button>
-        <button class="key-btn" onclick="inputDigit('7')">7</button>
-        <button class="key-btn" onclick="inputDigit('8')">8</button>
-        <button class="key-btn" onclick="inputDigit('9')">9</button>
-        <button class="key-btn action-btn" onclick="clearInput()">지움</button>
-        <button class="key-btn" onclick="inputDigit('0')">0</button>
-        <button class="key-btn enter-btn" onclick="submitShortAnswer()">확인</button>
+        <button class="key-btn" type="button" onclick="inputDigit('1')">1</button>
+        <button class="key-btn" type="button" onclick="inputDigit('2')">2</button>
+        <button class="key-btn" type="button" onclick="inputDigit('3')">3</button>
+        <button class="key-btn" type="button" onclick="inputDigit('4')">4</button>
+        <button class="key-btn" type="button" onclick="inputDigit('5')">5</button>
+        <button class="key-btn" type="button" onclick="inputDigit('6')">6</button>
+        <button class="key-btn" type="button" onclick="inputDigit('7')">7</button>
+        <button class="key-btn" type="button" onclick="inputDigit('8')">8</button>
+        <button class="key-btn" type="button" onclick="inputDigit('9')">9</button>
+        <button class="key-btn action-btn" type="button" onclick="clearInput()">지움</button>
+        <button class="key-btn" type="button" onclick="inputDigit('0')">0</button>
+        <button class="key-btn enter-btn" type="button" onclick="submitShortAnswer()">확인</button>
       </div>
     </div>
 
@@ -323,6 +310,7 @@
       danContainer.innerHTML = '';
       for (let i = 2; i <= 9; i++) {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = `dan-btn ${selectedDans.has(i) ? 'active' : ''}`;
         btn.textContent = `${i}단`;
         btn.onclick = () => toggleDan(i, btn);
@@ -443,6 +431,7 @@
 
       shuffled.forEach(opt => {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'choice-btn';
         btn.textContent = opt;
         btn.onclick = () => {
@@ -455,14 +444,12 @@
       });
     }
 
-    // 화면 키패드 입력 로직 (스마트폰 키보드 팝업 방지)
     function inputDigit(digit) {
       if (isProcessing) return;
-      if (currentInput.length >= 2) return; // 구구단 답은 최대 2자리
+      if (currentInput.length >= 2) return;
       currentInput += digit;
       answerDisplay.textContent = currentInput;
 
-      // 두 자리 수이거나 정답과 일치하는 순간 바로 판정하려면 엔터 없이도 가능
       if (parseInt(currentInput, 10) === correctAnswer) {
         submitShortAnswer();
       }
@@ -479,7 +466,6 @@
       handleAnswer(userVal === correctAnswer);
     }
 
-    // PC 물리 키보드 지원 유지
     window.addEventListener('keydown', (e) => {
       if (currentMode !== 'short' || isProcessing) return;
       if (e.key >= '0' && e.key <= '9') {
